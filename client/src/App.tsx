@@ -1,34 +1,40 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-
-type TDeck = {
-  title: string
-  _id: string
-}
+import { Link } from 'react-router-dom'
+import { deleteDeck } from './api/deleteDeck'
+import { getDecks } from './api/getDecks'
+import { TDeck } from './api/getDecks'
+import { createDecks } from './api/createDecks'
 
 function App() {
   const [decks, setDecks] = useState<TDeck[]>([])
   const [title, setTitle] = useState('')
+  const [error, setError] = useState('')
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+
+    if (!title) return setError('Please Enter a Title')
+
+    const deck = await createDecks(title)
+
+    setDecks([...decks, deck])
     setTitle('')
-    fetch('http://localhost:4000/decks', {
-      method: 'POST',
-      body: JSON.stringify({ title }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    setError('')
+  }
+
+  async function handleDelete(deckId: string) {
+    await deleteDeck(deckId)
+    setDecks(decks.filter((deck) => deck._id !== deckId))
   }
 
   useEffect(() => {
-    fetch('http://localhost:4000/decks')
-      .then((res) => res.json())
-      .then((data) => {
-        setDecks(data)
-      })
-  }, [title])
+    async function fetchDecks() {
+      const newDecks = await getDecks()
+      setDecks(newDecks)
+    }
+    fetchDecks()
+  }, [])
 
   return (
     <div className="App">
@@ -36,7 +42,11 @@ function App() {
         <ul className="decks">
           {decks.map((deck) => (
             <div key={deck._id}>
-              <li>{deck.title}</li>
+              <li>
+                <button onClick={() => handleDelete(deck._id)}>X</button>
+
+                <Link to={`/deck/${deck._id}`}>{deck.title}</Link>
+              </li>
             </div>
           ))}
         </ul>
@@ -56,8 +66,12 @@ function App() {
           Create Deck
         </button>
       </form>
+      {error && <h4>{error}</h4>}
     </div>
   )
 }
 
 export default App
+function createDeck(title: string) {
+  throw new Error('Function not implemented.')
+}

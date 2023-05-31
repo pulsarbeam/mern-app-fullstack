@@ -25,6 +25,13 @@ app.get('/decks', async (req: Request, res: Response) => {
   res.json(decks)
 })
 
+app.delete('/decks/:id', async (req: Request, res: Response) => {
+  const deckId = req.params.id
+
+  const deck = await Deck.findByIdAndDelete(deckId)
+  res.json(deck)
+})
+
 mongoose.connect(process.env.MONGO_URL!).then(() => {
   console.log(`Connected to ${PORT}!`)
 
