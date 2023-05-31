@@ -1,3 +1,5 @@
+import { config } from 'dotenv'
+config()
 import express, { Request, Response } from 'express'
 import mongoose from 'mongoose'
 
@@ -15,12 +17,8 @@ app.post('/decks', async (req: Request, res: Response) => {
   res.json(newDeck)
 })
 
-mongoose
-  .connect(
-    'mongodb+srv://renegrooth:w55m5KISBxpObH09@cluster0.h3gdar7.mongodb.net/?retryWrites=true&w=majority'
-  )
-  .then(() => {
-    console.log(`Connected to ${PORT}!`)
+mongoose.connect(process.env.MONGO_URL!).then(() => {
+  console.log(`Connected to ${PORT}!`)
 
-    app.listen(PORT)
-  })
+  app.listen(PORT)
+})
