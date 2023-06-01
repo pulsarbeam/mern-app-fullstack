@@ -72,6 +72,3 @@ function App() {
 }
 
 export default App
-function createDeck(title: string) {
-  throw new Error('Function not implemented.')
-}

@@ -1,10 +1,13 @@
 import { config } from 'dotenv'
 config()
-import express, { Request, Response } from 'express'
+import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 
-import Deck from './models/Deck'
+import { getDecksController } from './controllers/getDeckController'
+import { createDecksConroller } from './controllers/createDeckContoller'
+import { deleteDeckController } from './controllers/deleteDeckController'
+import { createCardForDeckController } from './controllers/createCardForDeckController'
 
 const PORT = 4000
 
@@ -13,24 +16,13 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.post('/decks', async (req: Request, res: Response) => {
-  const newDeck = new Deck({ title: req.body.title })
-  await newDeck.save()
-  res.json(newDeck)
-})
+app.post('/decks', createDecksConroller)
 
-app.get('/decks', async (req: Request, res: Response) => {
-  const decks = await Deck.find()
+app.get('/decks', getDecksController)
 
-  res.json(decks)
-})
+app.delete('/decks/:deckId', deleteDeckController)
 
-app.delete('/decks/:id', async (req: Request, res: Response) => {
-  const deckId = req.params.id
-
-  const deck = await Deck.findByIdAndDelete(deckId)
-  res.json(deck)
-})
+app.post('/decks/:deckId/cards', createCardForDeckController)
 
 mongoose.connect(process.env.MONGO_URL!).then(() => {
   console.log(`Connected to ${PORT}!`)

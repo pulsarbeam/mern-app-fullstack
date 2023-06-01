@@ -5,6 +5,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 const DeckSchema = new Schema({
   title: String,
+  cards: [String],
 })
 
 const MyModel = mongoose.model('Deck', DeckSchema)
