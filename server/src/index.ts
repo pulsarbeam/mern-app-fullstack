@@ -1,31 +1,35 @@
-import { config } from 'dotenv'
-config()
-import express from 'express'
-import mongoose from 'mongoose'
-import cors from 'cors'
+import { config } from "dotenv";
+config();
 
-import { getDecksController } from './controllers/getDeckController'
-import { createDecksConroller } from './controllers/createDeckContoller'
-import { deleteDeckController } from './controllers/deleteDeckController'
-import { createCardForDeckController } from './controllers/createCardForDeckController'
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import { getDecksController } from "./controllers/getDecksController";
+import { createDeckController } from "./controllers/createDeckController";
+import { deleteDeckController } from "./controllers/deleteDeckController";
+import { getDeckController } from "./controllers/getDeckController";
+import { createCardForDeckController } from "./controllers/createCardForDeckController";
+import { deleteCardOnDeckController } from "./controllers/deleteCardOnDeckController";
 
-const PORT = 4000
+const PORT = 4000;
 
-const app = express()
+const app = express();
 
-app.use(cors())
-app.use(express.json())
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+app.use(express.json());
 
-app.post('/decks', createDecksConroller)
-
-app.get('/decks', getDecksController)
-
-app.delete('/decks/:deckId', deleteDeckController)
-
-app.post('/decks/:deckId/cards', createCardForDeckController)
+app.get("/decks", getDecksController);
+app.post("/decks", createDeckController);
+app.delete("/decks/:deckId", deleteDeckController);
+app.get("/decks/:deckId", getDeckController);
+app.post("/decks/:deckId/cards", createCardForDeckController);
+app.delete("/decks/:deckId/cards/:index", deleteCardOnDeckController);
 
 mongoose.connect(process.env.MONGO_URL!).then(() => {
-  console.log(`Connected to ${PORT}!`)
-
-  app.listen(PORT)
-})
+  console.log(`listening on port ${PORT}`);
+  app.listen(PORT);
+});

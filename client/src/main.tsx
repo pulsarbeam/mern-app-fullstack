@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import Deck from './Deck.tsx'
+import Header from './Header.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 const router = createBrowserRouter([
@@ -10,13 +11,16 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: '/deck/:id',
+    path: '/decks/:deckId',
     element: <Deck />,
   },
 ])
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <div className="page">
+      <Header />
+      <RouterProvider router={router} />
+    </div>
   </React.StrictMode>
 )

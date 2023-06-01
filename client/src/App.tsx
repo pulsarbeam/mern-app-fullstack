@@ -38,6 +38,8 @@ function App() {
 
   return (
     <div className="App">
+      
+        <h1>Flash Cards</h1>
       <div>
         <ul className="decks">
           {decks.map((deck) => (
@@ -45,7 +47,7 @@ function App() {
               <li>
                 <button onClick={() => handleDelete(deck._id)}>X</button>
 
-                <Link to={`/deck/${deck._id}`}>{deck.title}</Link>
+                <Link to={`/decks/${deck._id}`}>{deck.title}</Link>
               </li>
             </div>
           ))}
